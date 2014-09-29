@@ -56,3 +56,4 @@ target/
 # model output files
 *.txt
 *.zip
+*.pdf

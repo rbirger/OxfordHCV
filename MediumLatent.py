@@ -158,18 +158,16 @@ while I[j] >= 0 and j<M-1:
     #update viral load and ALT
     VL[j+1] = UpdateVL(rho, N_liver, N, R, gamma, c, I[j+1])
     ALT[j+1] = UpdateALT(eps, nu_T, nu_I, delta, ALT[j], T[j], E[j], Ex[j], I[j], time[j+1]-time[j])
-    j+=1
+   
     
-    #write output to files every 10000 time steps
-    if (j>0 and j%10000 == 0) or j == M-1 :
+    j+=1
+
+    #write output to file every timestep
+    if minKey < int(time[j]) or j == M-1:
         if j == M-1:
             finalFile = True
-        OutputPrevFileMod(Infecteds, minKey, OutPrevFileName, finalFile)
-        OutputChainFileMod(InfectionChain, minKey, OutChainFileName, finalFile)
-        minKey = minKey + len(Infecteds)
-        
-        InfectionChain = [InfectionChain[-1]]
-        Infecteds = [Infecteds[-1]]
+        Infecteds, InfectionChain, minKey = OutputTempFiles(Infecteds, InfectionChain, minKey, OutPrevFileName, OutChainFileName, finalFile)
+
     
 #######################################
 

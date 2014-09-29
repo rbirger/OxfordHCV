@@ -159,7 +159,7 @@ def UpdateInfectionChain(InfectionChain, Infector, lastCellID, time, minKey):
     '''Update Transmission Chain list'''
     if len(InfectionChain)< int(time)+1-minKey:
         InfectionChain.append([])
-    InfectionChain[int(time)-minKey].append([Infector, lastCellID])
+    InfectionChain[int(time) -minKey].append([Infector, lastCellID])
     return InfectionChain
     
     
@@ -168,7 +168,7 @@ def UpdateInfecteds(Infecteds, InfectedList, LatentList, LatentXList, time, minK
     if len(Infecteds) < int(time)+1-minKey:
         Infecteds.append([])
     InfectedIDs = InfectedList+ LatentList+LatentXList
-    Infecteds[int(time)-minKey] = list(set(Infecteds[int(time)-minKey] + InfectedIDs))
+    Infecteds[int(time) -minKey] = list(set(Infecteds[int(time) -minKey] + InfectedIDs))
     return Infecteds
 
 def UpdateInfectedsTwoPatch(Infecteds, InfectedList, Infected2List, LatentList, LatentXList, time, minKey):
@@ -176,7 +176,7 @@ def UpdateInfectedsTwoPatch(Infecteds, InfectedList, Infected2List, LatentList, 
     if len(Infecteds) < int(time)+1-minKey:
         Infecteds.append([])
     InfectedIDs = InfectedList+ LatentList+LatentXList+Infected2List
-    Infecteds[int(time)-minKey] = list(set(Infecteds[int(time)-minKey] + InfectedIDs))
+    Infecteds[int(time) - minKey] = list(set(Infecteds[int(time) -minKey] + InfectedIDs))
     return Infecteds
 
 def UpdateVL(rho, N_liver, N, R, gamma, c, iCells):
@@ -187,45 +187,45 @@ def UpdateALT(eps, nu_T, nu_I, delta, oldALT, T, E, Ex, I, tStep):
     newALT = (eps*(nu_T*(T + E+ Ex) + nu_I*I)-delta*oldALT)*tStep
     return newALT
 
-# def OutputPrevFile(Infecteds, filename = None):
-#     #First, sort Infecteds so they are in order of cell ID
-#     InfectedsSort = dict()
-#     if filename == None:
-#         now = datetime.datetime.now()
-#         filename = 'Infecteds_'+ now.strftime("%I%M%S%B%d")
-#     zipfilename = filename + '.zip'
-#     for key1, item in enumerate(Infecteds):
-#         item.sort(key = lambda x: abs(int(x)))
-#         InfectedsSort[key1] = item
-#     f = open(filename, 'w') 
-#     writer = csv.writer(f, delimiter = ' ')
-#     for key, value in InfectedsSort.iteritems():
-#         writer.writerow([key] + value)
-#     f.close()
-#     z = zipfile.ZipFile(zipfilename, 'w', zipfile.ZIP_DEFLATED,allowZip64=True)
-#     z.write(filename)
-#     z.close()
-#     os.remove(filename)
+def OutputPrevFile(Infecteds, filename = None):
+    #First, sort Infecteds so they are in order of cell ID
+    InfectedsSort = dict()
+    if filename == None:
+        now = datetime.datetime.now()
+        filename = 'Infecteds_'+ now.strftime("%I%M%S%B%d")
+    zipfilename = filename + '.zip'
+    for key1, item in enumerate(Infecteds):
+        item.sort(key = lambda x: abs(int(x)))
+        InfectedsSort[key1] = item
+    f = open(filename, 'w') 
+    writer = csv.writer(f, delimiter = ' ')
+    for key, value in InfectedsSort.iteritems():
+        writer.writerow([key] + value)
+    f.close()
+    z = zipfile.ZipFile(zipfilename, 'w', zipfile.ZIP_DEFLATED,allowZip64=True)
+    z.write(filename)
+    z.close()
+    os.remove(filename)
 
-# def OutputChainFile(InfectionChain, filename = None):
-#     #Sort Infecteds and Infection chain, and break up infection chain
-#     InfectionChainSort = dict()
-#     if filename == None:
-#         now = datetime.datetime.now()
-#         filename = 'InfectionChain_'+ now.strftime("%I%M%S%B%d")
-#     zipfilename = filename + '.zip'
-#     for key1, item in enumerate(InfectionChain):
-#         a = sorted(list(item), key=lambda x: abs(x[0])
-#         InfectionChainSort[key1] = [b for c in a for b in c]
-#     f = open(filename, 'w') 
-#     writer = csv.writer(f, delimiter = ' ')
-#     for key, value in InfectionChainSort.iteritems():
-#         writer.writerow([key] + value)
-#     f.close()
-#     z = zipfile.ZipFile(zipfilename, 'w', zipfile.ZIP_DEFLATED, allowZip64=True)
-#     z.write(filename)
-#     z.close()
-#     os.remove(filename)
+def OutputChainFile(InfectionChain, filename = None):
+    #Sort Infecteds and Infection chain, and break up infection chain
+    InfectionChainSort = dict()
+    if filename == None:
+        now = datetime.datetime.now()
+        filename = 'InfectionChain_'+ now.strftime("%I%M%S%B%d")
+    zipfilename = filename + '.zip'
+    for key1, item in enumerate(InfectionChain):
+        a = sorted(list(item), key=lambda x: abs(x[0]))
+        InfectionChainSort[key1] = [b for c in a for b in c]
+    f = open(filename, 'w') 
+    writer = csv.writer(f, delimiter = ' ')
+    for key, value in InfectionChainSort.iteritems():
+        writer.writerow([key] + value)
+    f.close()
+    z = zipfile.ZipFile(zipfilename, 'w', zipfile.ZIP_DEFLATED, allowZip64=True)
+    z.write(filename)
+    z.close()
+    os.remove(filename)
 
 
 def saveWorkspace(kwargs, filename = None ):
@@ -256,6 +256,19 @@ def loadWorkspace(filename):
     unpicklefile.close()
     return unpickledDict
 
+def OutputTempFiles(Infecteds, InfectionChain, minKey, OutPrevFileName, OutChainFileName, finalFile):
+    OutputPrevFileMod(Infecteds, minKey, OutPrevFileName, finalFile)
+    OutputChainFileMod(InfectionChain, minKey, OutChainFileName, finalFile)
+    # if len(Infecteds) ==1:
+    #     minKey = minKey
+    # else:
+    #     minKey = minKey + len(Infecteds)
+    InfectionChain = []#[InfectionChain[-1]]
+    Infecteds = []#[Infecteds[-1]]
+    minKey +=1
+    return Infecteds, InfectionChain , minKey
+
+
 def OutputPrevFileMod(Infecteds, minKey, filename = None, finalFile=False):
     #First, sort Infecteds so they are in order of cell ID
     InfectedsSort = dict()
@@ -266,9 +279,13 @@ def OutputPrevFileMod(Infecteds, minKey, filename = None, finalFile=False):
     for key1, item in enumerate(Infecteds):
         item.sort(key = lambda x: abs(int(x)))
         InfectedsSort[key1] = item
-    f = open(filename, 'a') 
+    f = open(filename, 'ar') 
     writer = csv.writer(f, delimiter = ' ')
+    #reader = csv.reader(f)
     for key, value in InfectedsSort.iteritems():
+        # print "minKey is", minKey
+        # print "key is", key
+        # print "minKey plus key is", minKey + key
         writer.writerow([key+minKey] + value)
     f.close()
     if finalFile:
