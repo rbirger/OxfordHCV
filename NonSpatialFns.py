@@ -159,7 +159,7 @@ def UpdateInfectionChain(InfectionChain, Infector, lastCellID, time, minKey):
     '''Update Transmission Chain list'''
     if len(InfectionChain)< int(time)+1-minKey:
         InfectionChain.append([])
-    InfectionChain[int(time) -minKey].append([Infector, lastCellID])
+    InfectionChain[int(time) -minKey].append([abs(Infector), abs(lastCellID)])
     return InfectionChain
     
     
