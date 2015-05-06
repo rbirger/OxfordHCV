@@ -69,6 +69,8 @@ def GenTransitionProbsTwoPatch(changes, eta, beta_L, beta_V, nu_T, alpha, alpha_
     
     return Qij
 
+    
+
 def CalcNextState(Qij, randNums, oldTime):
     #Draw from exponential distributions of waiting times using pre-calculated random numbers
     time_vec = randNums/Qij
